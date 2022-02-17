@@ -7,7 +7,7 @@ import LogIn from './pages/LogIn';
 import {useSelector, useDispatch} from 'react-redux'
 import { loadUser } from './redux/actions';
 import HomeOne from './pages/HomeOne';
-import Editor1 from './Editor1';
+
 
 function App() {
     let dispatch = useDispatch();
@@ -30,7 +30,7 @@ function App() {
        <Route exact path ="/" element={<SignUp/>}/>
        <Route  path ="/login" element={<LogIn />}/>
        <Route  path ="/home" element={<Home/>}/>
-       <Route path = {`/homeOne/${localStorage.getItem("id")}`} element={<HomeOne />}/>
+       <Route path = {`/homeOne/:id`} element={<HomeOne />}/>
      </Routes>
      {/* <Editor1/> */}
    </div>

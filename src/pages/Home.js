@@ -15,7 +15,7 @@ const Home = () => {
   
     // console.log(users)
     useEffect(() => {
-        axios.get(`http://localhost:8000/data`)
+        axios.get(`https://issuepanel-crud.herokuapp.com/api/stars`)
         .then((res) => {
             //console.log("res ====> ",res.data)
             setDataFive(res.data)
@@ -107,12 +107,14 @@ const Home = () => {
             </thead>
             <tbody>
             {dataFive && dataFive.map((i) => {
+               let media1 = i.image && i.image.substring(8 ,i.image.length)
+               console.log("media1===>",media1)
                 return (
                 <tr>
-                    <td>{i.userId}</td>
+                    <td>{i.set_id}</td>
                     <td>{i.title}</td>
                     <td><div dangerouslySetInnerHTML={{ __html: i.description}}  /></td>
-                    <td><img src={require(`../images/${i.link}`)} style={{height:"100px",width:"100px"}}/></td>
+                    <td>{media1 ? <a href={`https://issuepanel-crud.herokuapp.com/${media1}`}><img src={`https://issuepanel-crud.herokuapp.com/${media1}`} style={{height:"100px",width:"100px"}}/></a>:<p>no data found</p>}</td>
                     <td>{i.type === "bug" ?<Badge bg="danger">{i.type}</Badge>:null}
                     {i.type === "discussion" ?<Badge bg="info">{i.type}</Badge>:null}
                     {i.type === "review" ?<Badge bg="warning">{i.type}</Badge>:null}

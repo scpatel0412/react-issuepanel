@@ -3,7 +3,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import { useDispatch,useSelector } from 'react-redux'
 import { addUser } from '../redux/actions';
 import { Row,Form,Button } from 'react-bootstrap';
-import maldives from "./maldives.jpg"
+
 import Typewriter from "typewriter-effect";
 import axios from 'axios'
 import { loadUser } from '../redux/actions';
@@ -11,11 +11,12 @@ import { loadUser } from '../redux/actions';
 const SignUp = () => {
 
     const [dataOne, setDataOne] = useState({
-        id: new Date().getTime().toString(),
+       
         email:"",
         pass:"",
         isAdmin:""
     })
+    const [formdata, setformdata] = useState('')
     
     const [error, setError] = useState('')
     const {users} = useSelector(state => state.users)
@@ -28,26 +29,17 @@ const SignUp = () => {
     const HandleSubmit = (e) => {
         dispatch(loadUser())
           e.preventDefault();
-         
+  
           if(dataOne.email === "" || dataOne.pass === "" ||dataOne.isAdmin ===""){
               setError('Please fill all data in all forms')
           }
-        //   if(dataOne.email) {
-        //     users?.map((i) => {
-        //         console.log("hello")
-        //         if(dataOne.email == i.email){
-                    
-        //          setError("email already exist")
-                    
-        //         }
-        //         return false;
-              
-               
-        //     })
-        // }
+     
           else{
+             
+              
                     dispatch(addUser(dataOne))
-                    history("/login",{ replace: true })             
+                   history("/login",{ replace: true })
+                          
            }
 
 
@@ -57,7 +49,7 @@ const SignUp = () => {
     return (
         <div className='container-fluid' style={{background:"#DDDFDF  "}}>
             <Row>
-            <div className='col-sm-8' style={{backgroundImage : `url(${maldives})`,height:"100vh",width:"700px",backgroundRepeat:"no-repeat",backgroundSize:"800px 800px",boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+            <div className='col-sm-8' style={{backgroundImage : `url(https://unsplash.com/photos/oR0uERTVyD0/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8bmF0dXJlfGVufDB8fHx8MTY0NTAxNzkyMw&force=true)`,height:"100vh",width:"700px",backgroundRepeat:"no-repeat",backgroundSize:"800px 800px",boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 
             </div>
             <div className='col-sm-3' style={{marginTop:"80px",marginLeft:"20px"}}>
@@ -85,7 +77,7 @@ const SignUp = () => {
                 </Form.Group>
                 <Form.Group>
                 <Form.Label style={{fontSize:"20px"}}>Password</Form.Label>
-                <Form.Control style={{padding:"15px"}}  type="text" placeholder="enter password" value={dataOne.pass} onChange={(e) => setDataOne({...dataOne,pass:e.target.value})}/><br/>
+                <Form.Control style={{padding:"15px"}}  type="password" placeholder="enter password" value={dataOne.pass} onChange={(e) => setDataOne({...dataOne,pass:e.target.value})}/><br/>
                 </Form.Group>
                 
                 <Form.Group className="form-check-inline"> 

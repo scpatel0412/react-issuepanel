@@ -17,14 +17,18 @@ const HomeOne = () => {
    let history = useNavigate();
    //let dispatch = useDispatch();
     const [formCall, setFormCall] = useState(false)
-    const [dataThree, setDataThree] = useState({userId : localStorage.getItem("id"),id: new Date().getTime().toString(),title:"",description:"",link:"",type:""});
+    const [dataThree, setDataThree] = useState({set_id : localStorage.getItem("id"),title:"",description:"",type:""});
     const [error, setError] = useState("");
     const [dataFour, setDataFour] = useState([]);
     const [filterData, setFilterData] = useState(''); 
     const [showButton, setShowButton] = useState(false);
-    const [local,setLocal] = useState("")
+    const [local, setLocal] = useState('')
+    const [changeButton,setChangeButton] = useState(false)
+    const [storeData,setStoreData] = useState({})
+    const [formdata, setformdata] = useState('')
+   
     useEffect(() => {
-      axios.get(`http://localhost:8000/data`)
+      axios.get(`https://issuepanel-crud.herokuapp.com/api/stars`)
            .then((res) => {
             //    console.log("HOMEONE DATA ===> ",res.data)
                setDataFour(res.data)
@@ -56,13 +60,17 @@ const HomeOne = () => {
         setFormCall(false)
     }
     const imageChange=(e)=>{
-        if(e.target.files && e.target.files.length > 0){
-            //console.log("image link",e.target.files[0].name)
-            // const imgurl = window.URL.createObjectURL(e.target.files[0])
-           // console.log("imgurl=====>",e.target.files[0].name);
-            setDataThree({...dataThree,link:e.target.files[0].name});
-            
-        }
+        let data = new FormData();
+      data.append('categoryImage',e.target.files[0] );
+      data.append('name',e.target.files[0].name)
+
+      data.append("title",dataThree.title)
+      data.append("description",dataThree.description)
+      
+       data.append("type",dataThree.type)
+       data.append("set_id",dataThree.set_id)
+      setformdata(data)
+      console.log("upload",formdata)
        
 }
 
@@ -75,6 +83,45 @@ const HomeOne = () => {
         localStorage.clear();
         history("/")
     }
+    const onDeleteData = (id) => {
+        if(window.confirm("are you sure want to delete data")){
+            axios.delete(`https://issuepanel-crud.herokuapp.com/api/stars/${id}`)
+            axios.get(`https://issuepanel-crud.herokuapp.com/api/stars`)
+            .then((res) => {
+             //    console.log("HOMEONE DATA ===> ",res.data)
+                setDataFour(res.data)
+                
+            })
+        }
+        // window.location.reload();
+    }
+    const onUpdateData = (id) => {
+       
+        // axios.get(`http://localhost:8000/data/${id}`)
+        //      .then((res) => {
+        //          console.log(res.data)
+        //          setStoreData(res.data)
+                 
+        //         //  localStorage.setItem("itemuserid",res.data.userId)
+        //         //  localStorage.setItem("itemtitle",res.data.title)
+        //         //  localStorage.setItem("itemdescription",res.data.description)
+        //         //  localStorage.setItem("itemlink",res.data.link)
+        //         //  localStorage.setItem("itemtype",res.data.type)
+        //         //  setDataThree({userId : res.data.userId,id: res.data.id,title:res.data.title,description:res.data.discription,link:res.data.link,type:res.data.type})
+        //      })
+        
+             let valTwo = val.find((i) => {return i._id ==id})
+             setDataThree({set_id : valTwo.set_id,title:valTwo.title,description:valTwo.description,type:valTwo.type})
+             localStorage.setItem("itemid",id)
+             setChangeButton(true)
+        
+        
+    }
+    const onUpdateDataOne = () => {
+        
+       
+        // window.location.reload();
+    }
     // const onFileHandler = (e) => {
     //     const reader = new FileReader();
     //     reader.onload = () =>{
@@ -86,24 +133,52 @@ const HomeOne = () => {
     // } 
     const onFormIssue =(e) => {
         e.preventDefault();
+    //     let data = new FormData();
+    //   data.append('categoryImage',dataThree.link );
+    //   data.append('name',dataThree.link.name)
+
+    //   data.append("title",dataThree.title)
+    //   data.append("description",dataThree.description)
+      
+    //    data.append("type",dataThree.type)
+    //    data.append("set_id",dataThree.set_id)
+    //   setformdata(data)
+    if(changeButton === false){
+      console.log("upload",formdata)
         if(dataThree.title === "" || dataThree.description === ""|| dataThree.link===""|| dataThree.type === ""){
             setError("Please fill all field")
         }
        
         else{
-             axios.post(`http://localhost:8000/data`,dataThree)
-             axios.get(`http://localhost:8000/data`)
+            if(window.confirm('are you sure you want to add data')){
+             axios.post(`https://issuepanel-crud.herokuapp.com/api/stars`,formdata)
+             axios.get(`https://issuepanel-crud.herokuapp.com/api/stars`)
              .then((res) => {
               //    console.log("HOMEONE DATA ===> ",res.data)
                  setDataFour(res.data)
                  
              })
+            }
+            // window.location.reload()
         }
-        window.location.reload();
-
+    }
+    else{
+        if(window.confirm("Are you sure you want to update data")){
+            axios.put(`https://issuepanel-crud.herokuapp.com/api/stars/${localStorage.getItem('itemid')}`,formdata)
+            setChangeButton(false)
+            axios.get(`https://issuepanel-crud.herokuapp.com/api/stars`)
+            .then((res) => {
+             //    console.log("HOMEONE DATA ===> ",res.data)
+                setDataFour(res.data)
+                
+            })
+        }
+        // window.location.reload();
+        
+    }
 
     }
-    let val =  dataFour?.filter((i) => {return i.userId == localStorage.getItem("id")})
+    let val =  dataFour?.filter((i) => {return i.set_id == localStorage.getItem("id")})
     // console.log("val ===> ",val)
     let valOne =  val?.filter((i) => {return i.type == filterData})
     // console.log("val ===> ",valOne)
@@ -150,7 +225,7 @@ const HomeOne = () => {
         
          <div className='container' style={{marginTop:"10px"}}>
              <Row>
-                <div className="col-sm-6">
+                <div className="col-sm-12">
                 {/* {['top', 'right', 'bottom', 'left'].map((placement) => (
     <OverlayTrigger
       trigger="click"
@@ -185,10 +260,7 @@ const HomeOne = () => {
                              <Form.Label>Description</Form.Label>
                              <CKEditor editor={ClassicEditor} data={dataThree.description} onChange={handleChange} />
                              </Form.Group>
-                             <Form.Group>
-                             <Form.Label>Link</Form.Label>
-                             <Form.Control type ="file" onChange={(e) => imageChange(e)} placeholder='enter your link'/>
-                             </Form.Group>
+                             
                              <Form.Group>
                              <Form.Label>Type</Form.Label>
                              <Form.Select value ={dataThree.type} onChange={(e) => setDataThree({...dataThree,type:e.target.value}) } placeholder='enter your type'>
@@ -198,8 +270,14 @@ const HomeOne = () => {
                                  <option value="review">Review</option>
                              </Form.Select>
                              </Form.Group>
-                             <Button type='submit'>Submit Issue</Button>
+                             <Form.Group>
+                             <Form.Label>Link</Form.Label>
+                             <Form.Control type ="file" name="categoryImage" onChange={imageChange} placeholder='enter your link'/>
+                             </Form.Group>
+                             <Button type='submit'>{changeButton === false ? 'Submit Issue' : 'Update Issue'}</Button>
+                             
                          </Form>
+                         
                      </div>
                      :null
                  }
@@ -213,19 +291,23 @@ const HomeOne = () => {
                 <th>Description</th>
                 <th>Link</th>
                 <th>Type</th>
+                <th>actions</th>
             </tr>
             </thead>
             <tbody>
             {val?.map((i) => {
                 // console.log(i.link.substring(i.link.length-4,i.link.length),i.link.substring(0,1));
+                let media1 = i.image && i.image.substring(8 ,i.image.length)
+                console.log("media1===>",media1)
                 return (
                 <tr key={i.id}>
                     <td>{i.title}</td>
                     <td>  <div dangerouslySetInnerHTML={{ __html: i.description}}  /></td>
-                    <td><img src={require(`../images/${i.link}`)} style={{height:"100px",width:"100px"}}/></td>
+                    <td>{media1 ? <a href={`https://issuepanel-crud.herokuapp.com/${media1}`}><img src={`https://issuepanel-crud.herokuapp.com/${media1}`} style={{height:"100px",width:"100px"}}/></a>:<p>no images found</p>}</td>
                     <td>{i.type === "bug" ?<Badge bg="danger">{i.type}</Badge>:null}
                     {i.type === "discussion" ?<Badge bg="info">{i.type}</Badge>:null}
                     {i.type === "review" ?<Badge bg="warning">{i.type}</Badge>:null}</td>
+                    <td><Button onClick={() => onDeleteData(i._id)}>Delete</Button><br/><Button onClick={() => onUpdateData(i._id)}>Update</Button></td>
                 </tr>
                 )
             })}
@@ -233,7 +315,7 @@ const HomeOne = () => {
         </Table>
          </div>
              </div>
-             <div className='col-sm-6'>
+             <div className='col-sm-12'>
                  
              <Form.Select  onChange={(e) => setFilterData(e.target.value) } placeholder='enter your type'>
              <option value=''>Enter your type</option>
@@ -249,18 +331,22 @@ const HomeOne = () => {
                 <th>Description</th>
                 <th>Link</th>
                 <th>Type</th>
+                
             </tr>
             </thead>
             <tbody>
             {valOne?.map((i) => {
+                let media1 = i.image && i.image.substring(8 ,i.image.length)
+                console.log("media1===>",media1)
                 return (
                 <tr key={i.id}>
                     <td>{i.title}</td>
                     <td><div dangerouslySetInnerHTML={{ __html: i.description}}  /></td>
-                    <td><img src={require(`../images/${i.link}`)} style={{height:"100px",width:"100px"}}/></td>
+                    <td>{media1 ? <a href={`https://issuepanel-crud.herokuapp.com/${media1}`}><img src={`https://issuepanel-crud.herokuapp.com/${media1}`} style={{height:"100px",width:"100px"}}/></a>:<p>no data found</p>}</td>
                     <td>{i.type === "bug" ?<Badge bg="danger">{i.type}</Badge>:null}
                     {i.type === "discussion" ?<Badge bg="info">{i.type}</Badge>:null}
                     {i.type === "review" ?<Badge bg="warning">{i.type}</Badge>:null}</td>
+                    
                 </tr>
                 )
             })}
@@ -288,3 +374,4 @@ const HomeOne = () => {
 
 
 export default HomeOne
+// https://github.com/ckeditor/ckeditor5-react/issues/241

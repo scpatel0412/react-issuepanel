@@ -15,7 +15,7 @@ const addSignUpUsers = () => ({
 
 export const loadUser = () => {
     return function(dispatch) {
-        axios.get(`http://localhost:8000/user`)
+        axios.get(`https://issuepanel-crud.herokuapp.com/api/users`)
              .then((res) => {
                 //  console.log("resp",res.data)
                  dispatch(getUsers(res.data))
@@ -27,7 +27,7 @@ export const loadUser = () => {
 } 
 export const addUser = (user) => {
     return function(dispatch) {
-        axios.post(`http://localhost:8000/user`,user)
+        axios.post(`https://issuepanel-crud.herokuapp.com/api/users`,user)
              .then((res) => {
                 //  console.log("resp",res.data)
                  dispatch(addSignUpUsers())
@@ -35,29 +35,8 @@ export const addUser = (user) => {
              })
              .catch((err) => {
                  console.log(err)
+                //  setError("please add another email")
              })
     }
 }
-// export const addIssue = (nature, natureOne) => {
-//     console.log("nature===> ",nature)
-//     const val = nature.find((i)=>{return i.id == localStorage.getItem("id")})
-//     console.log("val with find====>",val)
-//     console.log("natureone ===>", natureOne);
-    
-    
-   
-    
-//     // return function(dispatch) {
-      
-//     //     axios.post(`http://localhost:8000/user`,val.info.push(natureOne))
-//     //          .then((res) => {
-//     //              console.log("resp",res.data)
-//     //             //  console.log("nature ===>", val)
-//     //              dispatch(addUserIssue())
-//     //              dispatch(getUsers())
-//     //          })
-//     //          .catch((err) => {
-//     //              console.log(err)
-//     //          })
-//     // }
-// }  
+ 

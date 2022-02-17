@@ -3,7 +3,7 @@ import {useDispatch,useSelector} from 'react-redux'
 import { loadUser } from '../redux/actions';
 import { Link, useNavigate } from 'react-router-dom';
 import {Row,Form,Button} from "react-bootstrap"
-import maldives4 from "../images/maldives4.jpg"
+
 import Typewriter from "typewriter-effect";
 const LogIn = () => {
 
@@ -38,14 +38,14 @@ const LogIn = () => {
                { 
                    if(dataTwo.email === i.email && dataTwo.pass === i.pass ){
                      if(i.isAdmin === "yes"){
-                        localStorage.setItem("id",i.id)
+                        localStorage.setItem("id",i._id)
                         localStorage.setItem("email",i.email)
                         history(`/home`)    
                      }
                      else{
-                        localStorage.setItem("id",i.id)
+                        localStorage.setItem("id",i._id)
                         localStorage.setItem("email",i.email)
-                        history(`/homeOne/${i.id}`)
+                        history(`/homeOne/${i._id}`)
                      }  
                    
                    }
@@ -68,7 +68,7 @@ const LogIn = () => {
     return (
         <div className='container-fluid' style={{background:"#DDDFDF"}}>
          <Row>
-          <div className='col-sm-8' style={{backgroundImage : `url(${maldives4})`,height:"100vh",width:"700px",backgroundRepeat:"no-repeat",backgroundSize:"800px 800px",boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
+          <div className='col-sm-8' style={{backgroundImage : `url(https://unsplash.com/photos/oR0uERTVyD0/download?ixid=MnwxMjA3fDB8MXxzZWFyY2h8OHx8bmF0dXJlfGVufDB8fHx8MTY0NTAxNzkyMw&force=true)`,height:"100vh",width:"700px",backgroundRepeat:"no-repeat",backgroundSize:"800px 800px",boxShadow:"0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}}>
 
           </div>
           <div className='col-sm-3' style={{marginTop:"150px",marginLeft:"20px"}}>
@@ -96,7 +96,7 @@ const LogIn = () => {
                 </Form.Group>
                 <Form.Group>
                 <Form.Label style={{fontSize:"20px"}}>Password</Form.Label>
-                <Form.Control style={{padding:"15px"}} type="text" placeholder="Enter password" value={dataTwo.pass} onChange={(e) => setDataTwo({...dataTwo,pass:e.target.value})}  />
+                <Form.Control style={{padding:"15px"}} type="password" placeholder="Enter password" value={dataTwo.pass} onChange={(e) => setDataTwo({...dataTwo,pass:e.target.value})}  />
                 </Form.Group>
                 <Button type="submit" size="lg" style={{background:"#565656",border:"none",paddingLeft:"90px", paddingRight:"90px",marginTop:"30px"}}>Login</Button>
             </Form>
